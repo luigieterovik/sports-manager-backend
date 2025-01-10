@@ -10,12 +10,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         try {
+            if (userService.emailExists(user.getEmail())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O email já está em uso.");
+            }
+
             userService.saveUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("Usuário registrado com sucesso!");
         } catch (Exception e) {

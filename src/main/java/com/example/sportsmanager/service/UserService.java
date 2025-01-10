@@ -12,8 +12,11 @@ public class UserService {
     private UserRepository userRepository;
 
     public User saveUser(User user) {
-        // Criptografa a senha usando jBCrypt
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         return userRepository.save(user);
+    }
+
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
