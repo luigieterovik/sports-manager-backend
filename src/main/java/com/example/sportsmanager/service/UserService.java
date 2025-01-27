@@ -6,6 +6,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -19,4 +21,13 @@ public class UserService {
     public boolean emailExists(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public boolean checkPassword(String rawPassword, String hashedPassword) {
+        return BCrypt.checkpw(rawPassword, hashedPassword);
+    }
+
 }

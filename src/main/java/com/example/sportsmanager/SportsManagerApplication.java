@@ -18,8 +18,9 @@ public class SportsManagerApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/users/register").allowedOrigins("http://localhost:3000");
+				registry.addMapping("/users/**").allowedOrigins("http://localhost:3000");
 			}
 		};
 	}
+	
 }
