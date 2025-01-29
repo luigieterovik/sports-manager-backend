@@ -18,6 +18,13 @@ public class ReservationResponseDTO {
     private String empresaNome;
     private String total;
     private String status;
+    private String courtType;
+    private String uf;
+    private String city;
+    private String neighborhood;
+    private String street;
+    private String number;
+    private String complement;
 
     // 🔹 Construtor que realmente preenche os campos
     public ReservationResponseDTO(Reservation reservation) {
@@ -26,5 +33,12 @@ public class ReservationResponseDTO {
         this.total = String.valueOf(reservation.getValor_total()); // Se empresa estiver dentro de quadra
         this.status = reservation.getStatus();
         this.empresaNome = reservation.getAvailability().getCourt().getEnterprise().getNome();
+        this.courtType = reservation.getAvailability().getCourt().getTipo();
+        this.uf = reservation.getAvailability().getCourt().getUf();
+        this.city = reservation.getAvailability().getCourt().getCidade();
+        this.neighborhood = reservation.getAvailability().getCourt().getBairro();
+        this.street = reservation.getAvailability().getCourt().getLogradouro();
+        this.number = reservation.getAvailability().getCourt().getNumero();
+        this.complement = reservation.getAvailability().getCourt().getComplemento();
     }
 }

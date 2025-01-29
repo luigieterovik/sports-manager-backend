@@ -6,6 +6,9 @@ import com.example.sportsmanager.infra.security.CustomUserDetailsService;
 import com.example.sportsmanager.infra.security.TokenService;
 import com.example.sportsmanager.model.Availability;
 import com.example.sportsmanager.model.Prices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.server.ResponseStatusException;
 import com.example.sportsmanager.model.Reservation;
 import com.example.sportsmanager.model.User;
 import com.example.sportsmanager.repository.AvailabilityRepository;
@@ -36,6 +39,8 @@ import java.util.Optional;
 public class ReservationController {
     @Autowired
     private ObjectMapper objectMapper;
+    private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
+
 
     @Autowired
     private ReservationService reservationService;
@@ -48,6 +53,7 @@ public class ReservationController {
 
     @Autowired
     private TokenService tokenService;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -56,26 +62,28 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDTO> criarReserva(@RequestBody Map<String, Object> dadosReserva, HttpServletRequest request) {
-        Long disponibilidadeId = Long.parseLong(dadosReserva.get("disponibilidadeId").toString());
-        // Verificar o formato da data
+        logger.info("Dados da reserva recebidos: {}", dadosReserva);
+
+        Long precoId = Long.parseLong(dadosReserva.get("precoId").toString());
         String dataStr = dadosReserva.get("data").toString();
         LocalDateTime dataReserva;
 
+        Long quadraId = Long.parseLong(dadosReserva.get("quadraId").toString());
+
         try {
-            dataReserva = LocalDateTime.parse(dataStr); // Tenta converter para LocalDateTime
+            dataReserva = LocalDateTime.parse(dataStr);
         } catch (DateTimeParseException e) {
-            // Se falhar, tenta converter para LocalDate (sem hora)
-            dataReserva = LocalDate.parse(dataStr).atStartOfDay(); // Converte para LocalDateTime com hora 00:00
+            dataReserva = LocalDate.parse(dataStr).atStartOfDay();
         }
 
-        Long quadraId = Long.parseLong(dadosReserva.get("quadraId").toString());
-        Long precoId = Long.parseLong(dadosReserva.get("precoId").toString());
 
         String token = request.getHeader("Authorization").substring(7);
         String userEmail = tokenService.validateToken(token);
         User user = userRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
 
-        Availability availability = availabilityRepository.findFirstByCourt_IdOrderByIdAsc(quadraId).get();
+
+        Availability availability = availabilityRepository.findById(precoId)
+                .orElseThrow(() -> new RuntimeException("Disponibilidade não encontrada"));
 
         float price = availability.getPrices().getPrice();
 
@@ -86,13 +94,10 @@ public class ReservationController {
         reservation.setValor_total(BigDecimal.valueOf(price));
         reservation.setStatus("pendente");
 
-        // Salvando a reserva no banco de dados
         Reservation savedReservation = reservationService.save(reservation);
 
-        // Criando o DTO de resposta
         ReservationResponseDTO responseDTO = new ReservationResponseDTO(savedReservation);
 
-        // Retornando a resposta com a reserva criada
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -125,7 +130,6 @@ public class ReservationController {
             e.printStackTrace();
         }
 
-
         // Retorna as reservas com sucesso
         return ResponseEntity.ok(reservas);
     }
@@ -140,9 +144,22 @@ public class ReservationController {
 
     // Cancelar uma reserva
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> cancelarReserva(@PathVariable Long id) {
+    public ResponseEntity<Void> cancelarReserva(@PathVariable Long id, HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();  // Retorna 401 se o token estiver ausente ou mal formatado
+        }
+
+        String token = authHeader.substring(7);
+        String userEmail = tokenService.validateToken(token);
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
         reservationService.cancelarReserva(id);
         return ResponseEntity.noContent().build();
     }
+
 }
 

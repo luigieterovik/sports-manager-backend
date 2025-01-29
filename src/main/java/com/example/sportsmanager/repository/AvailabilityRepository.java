@@ -14,5 +14,5 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
 
     Optional<Availability> findById(Long id);
 
-    Optional<Availability> findFirstByCourt_IdOrderByIdAsc(Long courtId);
+    Optional<Availability> findByCourt_IdAndPrices_Id(Long courtId, Long priceId);
 }

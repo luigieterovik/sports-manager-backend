@@ -31,6 +31,13 @@ public class SportsManagerApplication {
 						.allowedMethods("GET", "POST", "PUT", "DELETE")
 						.allowedHeaders("*")
 						.allowCredentials(true);
+
+				// Permitir apenas para a origem específica e com autenticação no /reservation/**
+				registry.addMapping("/prices/**")
+						.allowedOrigins("http://localhost:3000")
+						.allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowedHeaders("*")
+						.allowCredentials(true);
 			}
 		};
 	}
