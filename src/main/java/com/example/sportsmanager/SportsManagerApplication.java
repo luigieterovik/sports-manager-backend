@@ -18,9 +18,22 @@ public class SportsManagerApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/users/**").allowedOrigins("http://localhost:3000");
+				// Permitir acesso público ao endpoint /users/**
+				registry.addMapping("/users/**")
+						.allowedOrigins("http://localhost:3000")
+						.allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowedHeaders("*")
+						.allowCredentials(true);
+
+				// Permitir apenas para a origem específica e com autenticação no /reservation/**
+				registry.addMapping("/reservation/**")
+						.allowedOrigins("http://localhost:3000")
+						.allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowedHeaders("*")
+						.allowCredentials(true);
 			}
 		};
 	}
+
 	
 }
