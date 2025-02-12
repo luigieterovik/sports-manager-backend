@@ -20,7 +20,7 @@ public class UserController {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
-    private UserService userService;
+    private final UserService userService;
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
