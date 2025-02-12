@@ -12,9 +12,11 @@ public class Periods {
     private Long id;
 
     @Column(nullable = false)
+    @Temporal(TemporalType.TIME)
     private LocalTime horario_inicio;
 
     @Column(nullable = false)
+    @Temporal(TemporalType.TIME)
     private LocalTime horario_fim;
 
     public Long getId() {
