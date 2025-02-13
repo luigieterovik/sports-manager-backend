@@ -20,21 +20,21 @@ public class SportsManagerApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				// Permitir acesso público ao endpoint /users/**
 				registry.addMapping("/users/**")
-						.allowedOrigins("http://localhost:3000")
+						.allowedOrigins("https://sports-manager-frontend-tx6n.vercel.app")
 						.allowedMethods("GET", "POST", "PUT", "DELETE")
 						.allowedHeaders("*")
 						.allowCredentials(true);
 
 				// Permitir apenas para a origem específica e com autenticação no /reservation/**
 				registry.addMapping("/reservation/**")
-						.allowedOrigins("http://localhost:3000")
+						.allowedOrigins("https://sports-manager-frontend-tx6n.vercel.app")
 						.allowedMethods("GET", "POST", "PUT", "DELETE")
 						.allowedHeaders("*")
 						.allowCredentials(true);
 
 				// Permitir apenas para a origem específica e com autenticação no /reservation/**
 				registry.addMapping("/prices/**")
-						.allowedOrigins("http://localhost:3000")
+						.allowedOrigins("https://sports-manager-frontend-tx6n.vercel.app")
 						.allowedMethods("GET", "POST", "PUT", "DELETE")
 						.allowedHeaders("*")
 						.allowCredentials(true);
