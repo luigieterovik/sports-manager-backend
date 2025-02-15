@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
-    Optional<Availability> findFirstByCourt_Id(Long courtId);  // Use 'court.id' ao invés de 'quadraId'
+    Optional<Availability> findFirstByCourt_Id(Long courtId);
 
     Optional<Availability> findById(Long id);
 

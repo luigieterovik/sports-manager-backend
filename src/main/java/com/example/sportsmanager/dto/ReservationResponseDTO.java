@@ -26,11 +26,10 @@ public class ReservationResponseDTO {
     private String number;
     private String complement;
 
-    // 🔹 Construtor que realmente preenche os campos
     public ReservationResponseDTO(Reservation reservation) {
-        this.id = reservation.getId(); // Supondo que User tem getNome()
-        this.data = String.valueOf(reservation.getData()); // Supondo que Quadra tem getNome()
-        this.total = String.valueOf(reservation.getValor_total()); // Se empresa estiver dentro de quadra
+        this.id = reservation.getId();
+        this.data = String.valueOf(reservation.getData());
+        this.total = String.valueOf(reservation.getValor_total());
         this.status = reservation.getStatus();
         this.empresaNome = reservation.getAvailability().getCourt().getEnterprise().getNome();
         this.courtType = reservation.getAvailability().getCourt().getTipo();

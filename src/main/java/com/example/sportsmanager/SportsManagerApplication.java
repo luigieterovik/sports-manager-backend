@@ -18,21 +18,18 @@ public class SportsManagerApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				// Permitir acesso público ao endpoint /users/**
 				registry.addMapping("/users/**")
 						.allowedOrigins("https://sports-manager-frontend-tx6n.vercel.app")
 						.allowedMethods("GET", "POST", "PUT", "DELETE")
 						.allowedHeaders("*")
 						.allowCredentials(true);
 
-				// Permitir apenas para a origem específica e com autenticação no /reservation/**
 				registry.addMapping("/reservation/**")
 						.allowedOrigins("https://sports-manager-frontend-tx6n.vercel.app")
 						.allowedMethods("GET", "POST", "PUT", "DELETE")
 						.allowedHeaders("*")
 						.allowCredentials(true);
 
-				// Permitir apenas para a origem específica e com autenticação no /reservation/**
 				registry.addMapping("/prices/**")
 						.allowedOrigins("https://sports-manager-frontend-tx6n.vercel.app")
 						.allowedMethods("GET", "POST", "PUT", "DELETE")

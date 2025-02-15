@@ -20,7 +20,7 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("sportsManager")
                     .withSubject(user.getEmail())
-//                    .withExpiresAt(this.generateExpirationData())
+                    .withExpiresAt(this.generateExpirationData())
                     .sign(algorithm);
 
             return token;

@@ -24,8 +24,6 @@ public class Prices {
     @Column(name = "valor", nullable = false)
     private float price;
 
-    // Getters and Setters
-
     public Long getId() {
         return id;
     }

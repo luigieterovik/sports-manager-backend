@@ -102,7 +102,6 @@ public class ReservationController {
     }
 
 
-    // Buscar uma reserva por ID
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDTO> buscarReserva(@PathVariable Long id) {
         ReservationResponseDTO reserva = reservationService.buscarReservaPorId(id);
@@ -111,44 +110,37 @@ public class ReservationController {
 
     @GetMapping("/listByUser")
     public ResponseEntity<List<ReservationResponseDTO>> buscarPorUsuario(HttpServletRequest request) {
-        // Obtém o token da requisição
-        String token = request.getHeader("Authorization").substring(7);  // Remove o prefixo "Bearer " do token
-        String userEmail = tokenService.validateToken(token);  // Valida o token e extrai o e-mail do usuário
+        String token = request.getHeader("Authorization").substring(7);
+        String userEmail = tokenService.validateToken(token);
 
-        // Busca o usuário pelo e-mail
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        // Busca as reservas do usuário
         List<ReservationResponseDTO> reservas = reservationService.buscarReservasPorUsuarioId(user.getId());
 
         try {
-            // Converte a lista de reservas em JSON para facilitar a visualização no log
             String reservasJson = objectMapper.writeValueAsString(reservas);
-            System.out.println(reservasJson);  // Logando as reservas como JSON
+            System.out.println(reservasJson);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Retorna as reservas com sucesso
         return ResponseEntity.ok(reservas);
     }
 
 
-    // Listar todas as reservas
     @GetMapping
     public ResponseEntity<List<ReservationResponseDTO>> listarReservas() {
         List<ReservationResponseDTO> reservas = reservationService.listarTodas();
         return ResponseEntity.ok(reservas);
     }
 
-    // Cancelar uma reserva
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancelarReserva(@PathVariable Long id, HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();  // Retorna 401 se o token estiver ausente ou mal formatado
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         String token = authHeader.substring(7);

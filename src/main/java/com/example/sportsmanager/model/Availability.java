@@ -13,11 +13,11 @@ public class Availability {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "quadra_id") // Coluna que referencia a tabela 'quadra'
+    @JoinColumn(name = "quadra_id")
     private Court court;
 
     @ManyToOne
-    @JoinColumn(name = "preco_id") // Coluna que referencia a tabela 'preco_disponibilidade'
+    @JoinColumn(name = "preco_id")
     private Prices prices;
 
     public Long getId() {
